@@ -1,6 +1,8 @@
 # Math Web App
 
-This repository contains a web application designed to help users practice and improve their arithmetic skills through interactive exercises. Whether you're a child learning basic math or an adult looking to sharpen your mental math abilities, this app offers an engaging, user-friendly, and customizable experience.
+This repository contains a web application designed to help users practice and improve their arithmetic skills through interactive exercises. Whether you're a child learning basic math or an adult looking to sharpen your mental math abilities, this app offers an engaging, user-friendly, customizable, and now offline-capable experience.
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/0e65c04f-56d6-4123-8b2d-10ead66a1c90/deploy-status)](https://app.netlify.com/sites/daddiotime-mentalmath/deploys)
 
 ---
 
@@ -16,6 +18,7 @@ This repository contains a web application designed to help users practice and i
 - **Multilingual Support**: Supports both English and German, adapting to your browser's language settings.
 - **Dark/Light Mode**: Automatically adjusts to your device's system settings for dark or light mode.
 - **Unique Answers**: Ensures that answer choices are always unique to prevent duplicates.
+- **Offline Capability**: The app can be used offline by embedding all CSS and JavaScript in the HTML and with a service worker caching the app.
 
 ---
 
@@ -25,7 +28,6 @@ Try out your math skills.
 
 - [Play Exercises](https://daddiotime-mentalmath.netlify.app/index.html)
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/0e65c04f-56d6-4123-8b2d-10ead66a1c90/deploy-status)](https://app.netlify.com/sites/daddiotime-mentalmath/deploys)
 
 
 
