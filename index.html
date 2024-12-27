@@ -471,14 +471,20 @@
                  }
              }
         }
-
+         function resetButtonStyle(buttons) {
+           buttons.forEach(button => {
+              button.style.backgroundColor = '';
+            });
+         }
         // Function to check the selected answer
         function checkAnswer(button) {
+            const options = document.querySelectorAll('.option');
              if (parseInt(button.textContent) === currentAnswer) {
                 correctAnswers++;
                correctCountDisplay.textContent = `Correct: ${correctAnswers}`;
                 body.style.backgroundColor = 'green'; // Set to green for correct answer
                  updateProgressBar();
+                 resetButtonStyle(options);
                 setTimeout(() => {
                     body.style.backgroundColor = ''; // Reset to default background color
                   generateQuestion();
@@ -488,6 +494,7 @@
                  incorrectCountDisplay.textContent = `Incorrect: ${incorrectAnswers}`;
                  body.style.backgroundColor = 'red';  // Set to red for incorrect answer
                  updateProgressBar();
+                 resetButtonStyle(options);
                  showModal(`${translations[currentLanguage].correctAnswerWas} ${currentAnswer}`);
                  setTimeout(() => {
                        body.style.backgroundColor = '';  // Set to red for incorrect answer
