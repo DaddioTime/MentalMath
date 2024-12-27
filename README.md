@@ -25,6 +25,10 @@ Try out your math skills.
 
 - [Play Exercises](https://daddiotime-mentalmath.netlify.app/index.html)
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/0e65c04f-56d6-4123-8b2d-10ead66a1c90/deploy-status)](https://app.netlify.com/sites/daddiotime-mentalmath/deploys)
+
+
+
 ---
 
 ## How It Works
