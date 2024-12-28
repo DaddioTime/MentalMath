@@ -1,6 +1,6 @@
  // service-worker.js
 
- const CACHE_NAME = 'math-trainer-v2.12';
+ const CACHE_NAME = 'math-trainer-v2.13';
  const urlsToCache = [
      'index.html' // Add your HTML file here
  ];

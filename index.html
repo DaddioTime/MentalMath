@@ -177,6 +177,16 @@
               background-color: #444;
               color: #f0f0f0;
          }
+         #versionDisplay {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: #888;
+        }
+          body.dark-mode #versionDisplay {
+              color: #aaa;
+          }
     </style>
 </head>
 
@@ -231,7 +241,8 @@
                  <p id="gameOverEmoji" style="font-size: 2em;"></p>
             </div>
         </div>
-     </div>
+    </div>
+    <div id="versionDisplay"></div>
      <script>
         // HTML elements
          const container = document.querySelector('.container');
@@ -251,6 +262,7 @@
         const gameOverEmoji = document.getElementById('gameOverEmoji');
         const incorrectModal = document.getElementById('incorrectModal');
         const modalMessage = document.getElementById('modalMessage');
+        const versionDisplay = document.getElementById('versionDisplay');
 
         // Variables to store game data
          let currentOperation;
@@ -305,8 +317,7 @@
                gameOverMessage: 'Richtige Antworten: {correct}, Falsche Antworten: {incorrect}'
              }
          };
-
-        // Function to determine initial language
+           // Function to determine initial language
           function getInitialLanguage() {
             const browserLang = navigator.language.substring(0, 2);
             return translations[browserLang] ? browserLang : 'en'; // Default to 'en' if language is not supported
@@ -341,6 +352,7 @@
                circles.forEach(circle => circle.classList.add('dark-mode'));
                  modalContent.classList.add('dark-mode');
                gameOverContent.classList.add('dark-mode');
+                versionDisplay.classList.add('dark-mode');
              }
          }
           setInitialTheme();
@@ -538,6 +550,9 @@
              incorrectCountDisplay.textContent = `Incorrect: 0`;
         }
            // Register the service worker
+         const CACHE_VERSION = 'math-trainer-v2.13';
+         versionDisplay.textContent = `Version: ${CACHE_VERSION}`;
+
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('service-worker.js')
                 .then(registration => {
