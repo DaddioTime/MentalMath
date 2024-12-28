@@ -3,7 +3,7 @@
     "short_name": "MathTrainer",
     "icons": [
       {
-        "src": "/assets/android-chrome-192x192.png",
+        "src": "assets/android-chrome-192x192.png",
         "sizes": "192x192",
         "type": "image/png"
       },
@@ -17,4 +17,5 @@
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#007bff"
-  }  
+  }
+  
