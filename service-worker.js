@@ -2,10 +2,10 @@
  * service-worker.js
  ****************************************************/
 
-const CACHE_NAME = 'math-trainer-v3.0';
+const CACHE_NAME = 'math-trainer-v3.01';
 const urlsToCache = [
   'index.html',
-  'style.css',
+  'main.css',
   'main.js'
 ];
 
