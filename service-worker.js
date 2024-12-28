@@ -7,13 +7,9 @@ const urlsToCache = [
   'index.html',
   'style.css',
   'main.js'
-  // Falls du weitere Dateien hast (Icons, manifest.json etc.), 
-  // füge sie hier hinzu:
-  // 'manifest.json',
-  // 'icons/icon-192.png',
-  // 'icons/icon-512.png'
 ];
 
+// Install event
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -28,19 +24,23 @@ self.addEventListener('install', event => {
   );
 });
 
-// Cache-First-Strategie mit Netzwerk-Fallback
+// Cache-first strategy with network fallback
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
         if (response) {
           console.log('Returning cached response for:', event.request.url);
-          return response; 
+          return response;
         }
         console.log('Fetching from network:', event.request.url);
         return fetch(event.request)
           .then(fetchResponse => {
-            if (!fetchResponse || fetchResponse.status !== 200 || fetchResponse.type !== 'basic') {
+            if (
+              !fetchResponse ||
+              fetchResponse.status !== 200 ||
+              fetchResponse.type !== 'basic'
+            ) {
               console.log('Not caching response:', event.request.url, fetchResponse.status, fetchResponse.type);
               return fetchResponse;
             }
@@ -63,7 +63,7 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// Alte Caches entfernen
+// Remove old caches
 self.addEventListener('activate', event => {
   const cacheWhiteList = [CACHE_NAME];
   event.waitUntil(

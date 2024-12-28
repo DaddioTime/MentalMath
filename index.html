@@ -1,568 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Trainer</title>
-    <style>
-        /* Basic styles for the page - default light mode */
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            color: #333;
-            transition: background-color 0.3s, color 0.3s;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        .container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-            width: 80%;
-            max-width: 400px;
-            transition: background-color 0.3s;
-        }
+  <!-- Enable iOS PWA support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-        .selection,
-        .question,
-        .options,
-        .result,
-        .progress-bar {
-            margin-bottom: 20px;
-        }
+  <title>Math Trainer</title>
 
-        .option,
-        .number-range,
-        .operation-button {
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 10px 5px;
-            font-size: 18px;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s;
-        }
+  <!-- Link CSS -->
+  <link rel="stylesheet" href="main.css" />
 
-        .option:hover,
-        .number-range:hover,
-        .operation-button:hover {
-            background: #0056b3;
-        }
+  <!-- Manifest for PWA -->
+  <link rel="manifest" href="manifest.json" />
 
-        .option:active,
-        .number-range:active,
-        .operation-button:active {
-            background: #004494;
-        }
+  <!-- Apple Touch Icon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 
-        .result {
-            font-size: 1.2em;
-            font-weight: bold;
-        }
+  <!-- Favicon PNG -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
 
-        .correct {
-            color: green;
-        }
-
-        .incorrect {
-            color: red;
-        }
-
-        /* Styles for the modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-             margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-             text-align: center;
-             font-size: 1.3em;
-        }
-
-        /* Styles for the progress circles */
-        .progress-bar {
-            display: flex;
-             /* Right to left fill */
-            justify-content: center;
-            gap: 5px;
-        }
-
-        .progress-circle {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background-color: gray;
-            display: inline-block;
-            transition: background-color 0.3s;
-        }
-
-        .progress-circle.correct {
-            background-color: green;
-        }
-
-        .progress-circle.incorrect {
-            background-color: red;
-        }
-        .question {
-            font-size: 1.5em; /* Bigger font for the question */
-        }
-
-        /* Dark mode styles */
-        body.dark-mode {
-            background-color: #333;
-            color: #f0f0f0;
-        }
-
-        .container.dark-mode {
-            background-color: #444;
-        }
-
-        .option.dark-mode,
-        .number-range.dark-mode,
-        .operation-button.dark-mode {
-            background: #666;
-        }
-
-         .progress-circle.dark-mode {
-            background-color: #777; /* Dark mode circle color */
-        }
-         .modal-content.dark-mode {
-             background-color: #444;
-             color: #f0f0f0;
-         }
-        #gameOverModal{
-            display: none;
-            position: fixed;
-            z-index: 2;
-            left: 0;
-            top: 0;
-            width: 100%;
-             height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-         }
-
-         .gameOver-content{
-            background-color: #fefefe;
-            margin: 15% auto;
-             padding: 20px;
-             border: 1px solid #888;
-            width: 80%;
-            text-align: center;
-             font-size: 1.3em;
-         }
-           .gameOver-content.dark-mode {
-              background-color: #444;
-              color: #f0f0f0;
-         }
-         #versionDisplay {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            font-size: 0.8em;
-            color: #888;
-        }
-          body.dark-mode #versionDisplay {
-              color: #aaa;
-          }
-    </style>
 </head>
-
 <body>
-    <div class="container">
-        <div class="selection" id="operationSelection">
-            <h2 data-i18n="chooseOperation">Choose the operation:</h2>
-            <!-- Buttons for selecting operation -->
-            <button class="operation-button" onclick="setOperation('addition')" data-i18n="addition">Addition (+)</button>
-            <button class="operation-button" onclick="setOperation('subtraction')" data-i18n="subtraction">Subtraction (-)</button>
-            <button class="operation-button" onclick="setOperation('multiplication')" data-i18n="multiplication">Multiplication (x)</button>
-            <button class="operation-button" onclick="setOperation('division')" data-i18n="division">Division (÷)</button>
-        </div>
-
-        <div class="selection" id="numberRangeSelection" style="display:none;">
-            <h2 data-i18n="chooseNumberRange">Choose the number range:</h2>
-            <!-- Buttons for selecting number range -->
-            <button class="number-range" onclick="setRange(5)" data-i18n="upTo5">Up to 5</button>
-            <button class="number-range" onclick="setRange(10)" data-i18n="upTo10">Up to 10</button>
-            <button class="number-range" onclick="setRange(20)" data-i18n="upTo20">Up to 20</button>
-            <button class="number-range" onclick="setRange(50)" data-i18n="upTo50">Up to 50</button>
-            <button class="number-range" onclick="setRange(100)" data-i18n="upTo100">Up to 100</button>
-            <button class="number-range" onclick="setRange(10, true)" data-i18n="tens">Tens (e.g. 20+30)</button>
-            <button class="number-range" onclick="setRange(5, true)" data-i18n="fives">Fives (e.g. 25+15)</button>
-        </div>
-
-        <div class="question" id="question" style="display:none;"></div>
-        <div class="options" id="options" style="display:none;">
-            <!-- Option buttons for answer choices -->
-            <button class="option" onclick="checkAnswer(this)"></button>
-            <button class="option" onclick="checkAnswer(this)"></button>
-            <button class="option" onclick="checkAnswer(this)"></button>
-            <button class="option" onclick="checkAnswer(this)"></button>
-        </div>
-        <div class="result" id="result" style="display:none;">
-            <!-- Display for correct/incorrect result -->
-            <span id="correctCount" class="correct" data-i18n="correct">Correct: 0</span> |
-            <span id="incorrectCount" class="incorrect" data-i18n="incorrect">Incorrect: 0</span>
-        </div>
-         <div class="progress-bar" id="progressBar" style="display:none;">
-        </div>
-        <!-- Modal for displaying incorrect answer -->
-         <div id="incorrectModal" class="modal">
-             <div class="modal-content" id="modalContent">
-                 <p id="modalMessage" data-i18n="correctAnswerWas">The correct answer was: </p>
-             </div>
-         </div>
-          <!-- Modal for game over  -->
-         <div id="gameOverModal" class="modal">
-             <div class="gameOver-content" id="gameOverContent">
-                <p id="gameOverMessage" data-i18n="gameOverMessage"></p>
-                 <p id="gameOverEmoji" style="font-size: 2em;"></p>
-            </div>
-        </div>
+  <div class="container">
+    <!-- Operation Selection -->
+    <div class="selection" id="operationSelection">
+      <h2 data-i18n="chooseOperation">Choose the operation:</h2>
+      <button id="additionBtn" class="operation-button" data-i18n="addition">Addition (+)</button>
+      <button id="subtractionBtn" class="operation-button" data-i18n="subtraction">Subtraction (-)</button>
+      <button id="multiplicationBtn" class="operation-button" data-i18n="multiplication">Multiplication (x)</button>
+      <button id="divisionBtn" class="operation-button" data-i18n="division">Division (÷)</button>
     </div>
-    <div id="versionDisplay"></div>
-    <script>
-        // HTML elements
-         const container = document.querySelector('.container');
-         const body = document.querySelector('body');
-        const operationSelection = document.getElementById('operationSelection');
-        const numberRangeSelection = document.getElementById('numberRangeSelection');
-        const questionElement = document.getElementById('question');
-        const optionsElement = document.getElementById('options');
-        const resultElement = document.getElementById('result');
-        const correctCountDisplay = document.getElementById('correctCount');
-        const incorrectCountDisplay = document.getElementById('incorrectCount');
-        const progressBarElement = document.getElementById('progressBar');
-         const modalContent = document.getElementById('modalContent');
-         const gameOverModal = document.getElementById('gameOverModal');
-        const gameOverContent = document.getElementById('gameOverContent');
-         const gameOverMessage = document.getElementById('gameOverMessage');
-        const gameOverEmoji = document.getElementById('gameOverEmoji');
-        const incorrectModal = document.getElementById('incorrectModal');
-        const modalMessage = document.getElementById('modalMessage');
-        const versionDisplay = document.getElementById('versionDisplay');
 
-        // Variables to store game data
-         let currentOperation;
-        let maxNumber = 10;
-         let currentAnswer;
-         let correctAnswers = 0;
-        let incorrectAnswers = 0;
-         let questionCount = 0;
-        let roundLimit = 10;
-        let useTensOrFives = false;
-         let progressCircles = [];
-          let usedAnswers = [];
+    <!-- Number Range Selection -->
+    <div class="selection" id="numberRangeSelection" style="display: none;">
+      <h2 data-i18n="chooseNumberRange">Choose the number range:</h2>
+      <button id="rangeBtn5" class="number-range" data-i18n="upTo5">Up to 5</button>
+      <button id="rangeBtn10" class="number-range" data-i18n="upTo10">Up to 10</button>
+      <button id="rangeBtn20" class="number-range" data-i18n="upTo20">Up to 20</button>
+      <button id="rangeBtn50" class="number-range" data-i18n="upTo50">Up to 50</button>
+      <button id="rangeBtn100" class="number-range" data-i18n="upTo100">Up to 100</button>
+      <button id="rangeBtnTens" class="number-range" data-i18n="tens">Tens (e.g. 20+30)</button>
+      <button id="rangeBtnFives" class="number-range" data-i18n="fives">Fives (e.g. 25+15)</button>
+    </div>
 
-        // Language settings and translation mapping
-         const translations = {
-             en: {
-                chooseOperation: 'Choose the operation:',
-                addition: 'Addition (+)',
-                subtraction: 'Subtraction (-)',
-                multiplication: 'Multiplication (x)',
-                division: 'Division (÷)',
-                chooseNumberRange: 'Choose the number range:',
-                 upTo5: 'Up to 5',
-                 upTo10: 'Up to 10',
-                 upTo20: 'Up to 20',
-                 upTo50: 'Up to 50',
-                upTo100: 'Up to 100',
-                 tens: 'Tens (e.g. 20+30)',
-                fives: 'Fives (e.g. 25+15)',
-                 correct: 'Correct: 0',
-                 incorrect: 'Incorrect: 0',
-                correctAnswerWas: 'The correct answer was: ',
-                gameOverMessage: 'Correct Answers: {correct}, Incorrect Answers: {incorrect}'
-             },
-             de: {
-                 chooseOperation: 'Wähle die Rechenoperation:',
-                 addition: 'Addition (+)',
-                 subtraction: 'Subtraktion (-)',
-                 multiplication: 'Multiplikation (x)',
-                 division: 'Division (÷)',
-                 chooseNumberRange: 'Wähle den Zahlenbereich:',
-                upTo5: 'Bis 5',
-                 upTo10: 'Bis 10',
-                 upTo20: 'Bis 20',
-                 upTo50: 'Bis 50',
-                 upTo100: 'Bis 100',
-                 tens: 'Zehner (z.B. 20+30)',
-                 fives: 'Fünfer (z.B. 25+15)',
-                 correct: 'Richtig: 0',
-                incorrect: 'Falsch: 0',
-                correctAnswerWas: 'Die richtige Antwort war: ',
-               gameOverMessage: 'Richtige Antworten: {correct}, Falsche Antworten: {incorrect}'
-             }
-         };
-           // Function to determine initial language
-          function getInitialLanguage() {
-            const browserLang = navigator.language.substring(0, 2);
-            return translations[browserLang] ? browserLang : 'en'; // Default to 'en' if language is not supported
-        }
-        // Apply the initial language
-         let currentLanguage = getInitialLanguage();
-         function setLanguage(lang){
-            currentLanguage = lang;
-             document.documentElement.lang = lang;
-            translatePage();
-        }
-         // Function to translate the page
-         function translatePage() {
-           const elements = document.querySelectorAll('[data-i18n]');
-             elements.forEach(element => {
-               const key = element.getAttribute('data-i18n');
-                if(translations[currentLanguage] && translations[currentLanguage][key]){
-                     element.textContent = translations[currentLanguage][key];
-                 }
-           });
-         }
-         setLanguage(currentLanguage);
+    <!-- Question & Answer Options -->
+    <div class="question" id="question" style="display: none;"></div>
+    <div class="options" id="options" style="display: none;">
+      <button class="option"></button>
+      <button class="option"></button>
+      <button class="option"></button>
+      <button class="option"></button>
+    </div>
 
-        // Function to check system color scheme and set initial theme
-         function setInitialTheme() {
-           if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){
-                body.classList.add('dark-mode');
-                 container.classList.add('dark-mode');
-                 const buttons = document.querySelectorAll('.option, .number-range, .operation-button');
-                buttons.forEach(button => button.classList.add('dark-mode'));
-                 const circles = document.querySelectorAll('.progress-circle');
-               circles.forEach(circle => circle.classList.add('dark-mode'));
-                 modalContent.classList.add('dark-mode');
-               gameOverContent.classList.add('dark-mode');
-                versionDisplay.classList.add('dark-mode');
-             }
-         }
-          setInitialTheme();
+    <!-- Result Area -->
+    <div class="result" id="result" style="display: none;">
+      <span id="correctCount" class="correct" data-i18n="correct">Correct: 0</span> |
+      <span id="incorrectCount" class="incorrect" data-i18n="incorrect">Incorrect: 0</span>
+    </div>
 
-       // Function to initialize progress bar circles
-         function initProgressBar() {
-           progressBarElement.innerHTML = ''; // Clear existing circles
-           progressCircles = [];
-            for (let i = 0; i < roundLimit; i++) {
-               const circle = document.createElement('div');
-                 circle.classList.add('progress-circle');
-               progressBarElement.appendChild(circle);
-              progressCircles.push(circle);
-           }
-         }
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar" style="display: none;"></div>
 
-        // Function to set the operation
-        function setOperation(operation) {
-           currentOperation = operation;
-             operationSelection.style.display = 'none';
-             numberRangeSelection.style.display = 'block';
-       }
+    <!-- Modal for Incorrect Answers -->
+    <div id="incorrectModal" class="modal">
+      <div class="modal-content" id="modalContent">
+        <p id="modalMessage" data-i18n="correctAnswerWas">The correct answer was: </p>
+      </div>
+    </div>
 
-        // Function to set the number range
-         function setRange(max, tensOrFives = false) {
-            maxNumber = max;
-            useTensOrFives = tensOrFives;
-             numberRangeSelection.style.display = 'none';
-           questionElement.style.display = 'block';
-            optionsElement.style.display = 'flex';
-            resultElement.style.display = 'block';
-           progressBarElement.style.display = 'flex';
-             initProgressBar();
-           generateQuestion();
-        }
+    <!-- Game Over Modal -->
+    <div id="gameOverModal" class="modal">
+      <div class="gameOver-content" id="gameOverContent">
+        <p id="gameOverMessage" data-i18n="gameOverMessage"></p>
+        <p id="gameOverEmoji" style="font-size: 2em;"></p>
+      </div>
+    </div>
+  </div>
 
-        // Function to generate math questions
-        function generateQuestion() {
-             if (questionCount >= roundLimit) {
-               showGameOver();
-                return;
-           }
+  <!-- Version Display -->
+  <div id="versionDisplay"></div>
 
-            let num1, num2;
-           if (useTensOrFives) {
-              const multiplier = useTensOrFives === true && maxNumber === 10 ? 10 : 5;
-                num1 = Math.floor(Math.random() * (maxNumber) + 1) * multiplier;
-              num2 = Math.floor(Math.random() * (maxNumber) + 1) * multiplier;
-           } else {
-                 num1 = Math.floor(Math.random() * (maxNumber + 1));
-              num2 = Math.floor(Math.random() * (maxNumber + 1));
-           }
-
-             let questionText;
-            switch (currentOperation) {
-               case 'addition':
-                  currentAnswer = num1 + num2;
-                   questionText = `${num1} + ${num2} = ?`;
-                    break;
-                case 'subtraction':
-                     if (num1 < num2) {
-                       [num1, num2] = [num2, num1]; // Ensure no negative results for this example
-                 }
-                     currentAnswer = num1 - num2;
-                    questionText = `${num1} - ${num2} = ?`;
-                   break;
-               case 'multiplication':
-                   currentAnswer = num1 * num2;
-                     questionText = `${num1} x ${num2} = ?`;
-                  break;
-                 case 'division':
-                    do {
-                       num1 = Math.floor(Math.random() * (maxNumber + 1));
-                         num2 = Math.floor(Math.random() * (maxNumber + 1)) + 1;
-                   } while (num1 % num2 !== 0); // Ensure it's divisible
-                     currentAnswer = num1 / num2;
-                    questionText = `${num1} ÷ ${num2} = ?`;
-                    break;
-          }
-
-
-           questionElement.textContent = questionText;
-            const options = document.querySelectorAll('.option');
-            const correctOption = Math.floor(Math.random() * 4);
-            // Generate unique incorrect answers
-            let availableAnswers = [];
-            for (let i = 0; i < 4; i++) {
-                 let wrongAnswer;
-               if (i === correctOption) {
-                   availableAnswers.push(currentAnswer);
-                 } else {
-                       do {
-                            if (currentOperation === 'multiplication') {
-                                 wrongAnswer = Math.floor(Math.random() * ((maxNumber + 1) * (maxNumber + 1))); // For multiplication, wider range
-                           } else if (currentOperation === 'subtraction') {
-                                 wrongAnswer = Math.floor(Math.random() * ((maxNumber + 1) * 2)) - maxNumber;  // For subtraction, can be negative
-                             } else {
-                                 wrongAnswer = Math.floor(Math.random() * ((maxNumber + 1) * 2)); // Basic range for addition and division
-                             }
-                       } while (wrongAnswer === currentAnswer || availableAnswers.includes(wrongAnswer));
-                       availableAnswers.push(wrongAnswer);
-                 }
-                options[i].textContent = availableAnswers[i];
-            }
-             questionCount++;
-         }
-         // Function to display the modal
-        function showModal(message) {
-              modalMessage.textContent = message;
-           incorrectModal.style.display = "block";
-           setTimeout(() => {
-                 incorrectModal.style.display = "none";
-                generateQuestion();
-           }, 3000);
-        }
-         // Function to update progress circles
-          function updateProgressBar() {
-            for (let i = 0; i < questionCount; i++) {
-                 if (i < correctAnswers) {
-                   progressCircles[i].classList.add('correct');
-                    progressCircles[i].classList.remove('incorrect');
-                 } else if (i < correctAnswers + incorrectAnswers) {
-                    progressCircles[i].classList.add('incorrect');
-                     progressCircles[i].classList.remove('correct');
-                } else {
-                    progressCircles[i].classList.remove('incorrect');
-                  progressCircles[i].classList.remove('correct');
-                 }
-             }
-        }
-        // Function to reset the style of the buttons
-         function resetButtonStyle(buttons) {
-             buttons.forEach(button => {
-                 button.style.backgroundColor = ''; // Reset the background color
-                 button.classList.remove('option:active'); // Remove the active class (if it is not removed through the style sheet)
-              });
-          }
-        // Function to check the selected answer
-        function checkAnswer(button) {
-           const options = document.querySelectorAll('.option');
-            if (parseInt(button.textContent) === currentAnswer) {
-                correctAnswers++;
-               correctCountDisplay.textContent = `Correct: ${correctAnswers}`;
-                 body.style.backgroundColor = 'green'; // Set to green for correct answer
-                 updateProgressBar();
-                 resetButtonStyle(options);
-                setTimeout(() => {
-                  body.style.backgroundColor = ''; // Reset to default background color
-                     generateQuestion();
-               }, 1000);
-            } else {
-                 incorrectAnswers++;
-                 incorrectCountDisplay.textContent = `Incorrect: ${incorrectAnswers}`;
-                 body.style.backgroundColor = 'red';  // Set to red for incorrect answer
-                 updateProgressBar();
-                resetButtonStyle(options);
-                 showModal(`${translations[currentLanguage].correctAnswerWas} ${currentAnswer}`);
-                 setTimeout(() => {
-                       body.style.backgroundColor = '';  // Set to red for incorrect answer
-                   }, 1000);
-             }
-        }
-          // Function to show game over message
-        function showGameOver() {
-           const percentageCorrect = (correctAnswers / roundLimit) * 100;
-            let emoji = '';
-             if (percentageCorrect >= 50) emoji = '🏆';
-             if (percentageCorrect >= 80) emoji = '🏆🏆';
-             if (percentageCorrect === 100) emoji = '🏆🏆🏆';
-             const gameOverText = translations[currentLanguage].gameOverMessage.replace('{correct}', correctAnswers).replace('{incorrect}', incorrectAnswers)
-            gameOverMessage.textContent = gameOverText;
-           gameOverEmoji.textContent = emoji;
-            gameOverModal.style.display = 'block';
-            setTimeout(() => {
-               gameOverModal.style.display = "none";
-                resetGame();
-             }, 5000);
-         }
-         // Function to reset the game
-        function resetGame() {
-             currentOperation = null;
-            maxNumber = 10;
-            currentAnswer = null;
-             correctAnswers = 0;
-           incorrectAnswers = 0;
-             questionCount = 0;
-            useTensOrFives = false;
-            usedAnswers = [];
-
-             operationSelection.style.display = 'block';
-            numberRangeSelection.style.display = 'none';
-            questionElement.style.display = 'none';
-            optionsElement.style.display = 'none';
-            resultElement.style.display = 'none';
-           progressBarElement.style.display = 'none';
-            correctCountDisplay.textContent = `Correct: 0`;
-             incorrectCountDisplay.textContent = `Incorrect: 0`;
-        }
-           // Register the service worker
-         const CACHE_VERSION = 'math-trainer-v2.15';
-         versionDisplay.textContent = `Version: ${CACHE_VERSION}`;
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js')
-                .then(registration => {
-                console.log('Service Worker registered with scope:', registration.scope);
-            }).catch(error => {
-              console.error('Service Worker registration failed:', error);
-            });
-        }
-    </script>
+  <!-- Main JavaScript -->
+  <script src="main.js"></script>
 </body>
 </html>

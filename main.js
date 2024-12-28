@@ -1,6 +1,6 @@
 /****************************************************
  * main.js
- * Gesamte Spiellogik und Event Listener
+ * Complete game logic and event listeners
  ****************************************************/
 
 // HTML Elements
@@ -77,7 +77,7 @@ const translations = {
   }
 };
 
-// Bestimme Initialsprache
+// Determine initial language
 function getInitialLanguage() {
   const browserLang = navigator.language.substring(0, 2);
   return translations[browserLang] ? browserLang : 'en';
@@ -102,7 +102,7 @@ function translatePage() {
 setLanguage(currentLanguage);
 
 /****************************************************
- *  Theme (Dark/Light) - setzt sich anfangs automatisch 
+ * Theme (Dark/Light) - automatically set at start
  ****************************************************/
 function setInitialTheme() {
   if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -120,13 +120,13 @@ function setInitialTheme() {
 setInitialTheme();
 
 /****************************************************
- * Hilfsfunktionen
+ * Utility functions
  ****************************************************/
 function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Fortschrittsanzeige initialisieren
+// Initialize progress bar
 function initProgressBar() {
   progressBarElement.innerHTML = ''; 
   progressCircles = [];
@@ -138,18 +138,18 @@ function initProgressBar() {
   }
 }
 
-// Modal anzeigen
+// Show modal for incorrect answer
 function showModal(message) {
   modalMessage.textContent = message;
   incorrectModal.style.display = "block";
-  // Nach 3 Sekunden schließen
+  // Close after 3 seconds
   setTimeout(() => {
     incorrectModal.style.display = "none";
     generateQuestion();
   }, 3000);
 }
 
-// Fortschrittsanzeige aktualisieren
+// Update progress bar
 function updateProgressBar() {
   for (let i = 0; i < questionCount; i++) {
     if (i < correctAnswers) {
@@ -164,7 +164,7 @@ function updateProgressBar() {
   }
 }
 
-// Game Over anzeigen
+// Show game over screen
 function showGameOver() {
   const percentageCorrect = (correctAnswers / roundLimit) * 100;
   let emoji = '';
@@ -186,7 +186,7 @@ function showGameOver() {
   }, 5000);
 }
 
-// Spiel zurücksetzen
+// Reset the game
 function resetGame() {
   currentOperation = null;
   maxNumber = 10;
@@ -208,7 +208,7 @@ function resetGame() {
 }
 
 /****************************************************
- * Frage generieren
+ * Generate question
  ****************************************************/
 function generateQuestion() {
   if (questionCount >= roundLimit) {
@@ -218,16 +218,15 @@ function generateQuestion() {
 
   let num1, num2;
 
-  // Division – wir generieren das Paar so, dass keine Reste entstehen
+  // Division - ensure no remainder
   if (currentOperation === 'division') {
     const divisor = getRandomIntInclusive(1, maxNumber);
-    // Quotient so wählen, dass num1 <= maxNumber * maxNumber (zur Sicherheit)
     const quotient = getRandomIntInclusive(0, maxNumber);
     num1 = quotient * divisor;
     num2 = divisor;
   } else {
     if (useTensOrFives) {
-      // Bei Tens oder Fives multiplier = 10 oder 5
+      // For Tens or Fives, multiplier = 10 or 5
       const multiplier = (maxNumber === 10) ? 10 : 5;
       num1 = getRandomIntInclusive(1, maxNumber) * multiplier;
       num2 = getRandomIntInclusive(1, maxNumber) * multiplier;
@@ -237,12 +236,12 @@ function generateQuestion() {
     }
   }
 
-  // Verhindere negative Ergebnisse bei Subtraktion (zur Vereinfachung)
+  // Prevent negative results for subtraction
   if (currentOperation === 'subtraction' && num1 < num2) {
     [num1, num2] = [num2, num1];
   }
 
-  // Bestimme die korrekte Antwort
+  // Determine the correct answer
   let questionText;
   switch (currentOperation) {
     case 'addition':
@@ -265,28 +264,22 @@ function generateQuestion() {
 
   questionElement.textContent = questionText;
 
-  // Antwort-Optionen erzeugen
+  // Generate answer options
   const options = document.querySelectorAll('.option');
   const correctOptionIndex = getRandomIntInclusive(0, 3);
 
-  // Sammele Antworten in einem Array
   let generatedAnswers = [];
   for (let i = 0; i < 4; i++) {
     if (i === correctOptionIndex) {
       generatedAnswers.push(currentAnswer);
     } else {
       let wrongAnswer;
-      // Je nach Operation andere Range
-      // Multiplikation -> könnte höher sein
-      // Subtraktion -> könnte auch negativ sein
-      // etc.
       do {
         if (currentOperation === 'multiplication') {
           wrongAnswer = getRandomIntInclusive(0, (maxNumber + 1) * (maxNumber + 1));
         } else if (currentOperation === 'subtraction') {
           wrongAnswer = getRandomIntInclusive(-maxNumber, maxNumber);
         } else {
-          // Für addition, division
           wrongAnswer = getRandomIntInclusive(0, maxNumber * 2);
         }
       } while (wrongAnswer === currentAnswer || generatedAnswers.includes(wrongAnswer));
@@ -295,7 +288,7 @@ function generateQuestion() {
     }
   }
 
-  // Buttons mit Text füllen
+  // Fill answer buttons
   options.forEach((btn, idx) => {
     btn.textContent = generatedAnswers[idx];
   });
@@ -304,13 +297,13 @@ function generateQuestion() {
 }
 
 /****************************************************
- * Antwort überprüfen
+ * Check selected answer
  ****************************************************/
 function checkAnswer(selectedValue) {
   if (parseInt(selectedValue) === currentAnswer) {
     correctAnswers++;
     correctCountDisplay.textContent = translations[currentLanguage].correct.split(':')[0] + `: ${correctAnswers}`;
-    body.style.backgroundColor = 'green'; // Kurzes Feedback
+    body.style.backgroundColor = 'green';
     updateProgressBar();
     setTimeout(() => {
       body.style.backgroundColor = '';
@@ -319,7 +312,7 @@ function checkAnswer(selectedValue) {
   } else {
     incorrectAnswers++;
     incorrectCountDisplay.textContent = translations[currentLanguage].incorrect.split(':')[0] + `: ${incorrectAnswers}`;
-    body.style.backgroundColor = 'red'; // Kurzes Feedback
+    body.style.backgroundColor = 'red';
     updateProgressBar();
     showModal(`${translations[currentLanguage].correctAnswerWas} ${currentAnswer}`);
     setTimeout(() => {
@@ -329,15 +322,15 @@ function checkAnswer(selectedValue) {
 }
 
 /****************************************************
- * Event Listener
+ * Event Listeners
  ****************************************************/
-// Operation-Buttons
+// Operation buttons
 document.getElementById('additionBtn').addEventListener('click', () => setOperation('addition'));
 document.getElementById('subtractionBtn').addEventListener('click', () => setOperation('subtraction'));
 document.getElementById('multiplicationBtn').addEventListener('click', () => setOperation('multiplication'));
 document.getElementById('divisionBtn').addEventListener('click', () => setOperation('division'));
 
-// Range-Buttons
+// Range buttons
 document.getElementById('rangeBtn5').addEventListener('click', () => setRange(5, false));
 document.getElementById('rangeBtn10').addEventListener('click', () => setRange(10, false));
 document.getElementById('rangeBtn20').addEventListener('click', () => setRange(20, false));
@@ -346,7 +339,7 @@ document.getElementById('rangeBtn100').addEventListener('click', () => setRange(
 document.getElementById('rangeBtnTens').addEventListener('click', () => setRange(10, true));
 document.getElementById('rangeBtnFives').addEventListener('click', () => setRange(5, true));
 
-// Antwort-Optionen
+// Answer buttons
 document.querySelectorAll('.option').forEach(optionBtn => {
   optionBtn.addEventListener('click', (e) => {
     checkAnswer(e.target.textContent);
@@ -354,7 +347,7 @@ document.querySelectorAll('.option').forEach(optionBtn => {
 });
 
 /****************************************************
- *  Funktionen für Operation & Range
+ * Functions for operation & range
  ****************************************************/
 function setOperation(operation) {
   currentOperation = operation;
@@ -375,7 +368,7 @@ function setRange(max, tensOrFives = false) {
 }
 
 /****************************************************
- *  Service Worker registrieren
+ * Register service worker
  ****************************************************/
 const CACHE_VERSION = 'math-trainer-v3.0';
 versionDisplay.textContent = `Version: ${CACHE_VERSION}`;
