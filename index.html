@@ -243,7 +243,7 @@
         </div>
     </div>
     <div id="versionDisplay"></div>
-     <script>
+    <script>
         // HTML elements
          const container = document.querySelector('.container');
          const body = document.querySelector('body');
@@ -483,36 +483,38 @@
                  }
              }
         }
+        // Function to reset the style of the buttons
          function resetButtonStyle(buttons) {
-           buttons.forEach(button => {
-              button.style.backgroundColor = '';
-            });
-         }
+             buttons.forEach(button => {
+                 button.style.backgroundColor = ''; // Reset the background color
+                 button.classList.remove('option:active'); // Remove the active class (if it is not removed through the style sheet)
+              });
+          }
         // Function to check the selected answer
         function checkAnswer(button) {
-            const options = document.querySelectorAll('.option');
-             if (parseInt(button.textContent) === currentAnswer) {
+           const options = document.querySelectorAll('.option');
+            if (parseInt(button.textContent) === currentAnswer) {
                 correctAnswers++;
                correctCountDisplay.textContent = `Correct: ${correctAnswers}`;
-                body.style.backgroundColor = 'green'; // Set to green for correct answer
+                 body.style.backgroundColor = 'green'; // Set to green for correct answer
                  updateProgressBar();
                  resetButtonStyle(options);
                 setTimeout(() => {
-                    body.style.backgroundColor = ''; // Reset to default background color
-                  generateQuestion();
+                  body.style.backgroundColor = ''; // Reset to default background color
+                     generateQuestion();
                }, 1000);
             } else {
                  incorrectAnswers++;
                  incorrectCountDisplay.textContent = `Incorrect: ${incorrectAnswers}`;
                  body.style.backgroundColor = 'red';  // Set to red for incorrect answer
                  updateProgressBar();
-                 resetButtonStyle(options);
+                resetButtonStyle(options);
                  showModal(`${translations[currentLanguage].correctAnswerWas} ${currentAnswer}`);
                  setTimeout(() => {
                        body.style.backgroundColor = '';  // Set to red for incorrect answer
                    }, 1000);
              }
-         }
+        }
           // Function to show game over message
         function showGameOver() {
            const percentageCorrect = (correctAnswers / roundLimit) * 100;
@@ -550,7 +552,7 @@
              incorrectCountDisplay.textContent = `Incorrect: 0`;
         }
            // Register the service worker
-         const CACHE_VERSION = 'math-trainer-v2.14';
+         const CACHE_VERSION = 'math-trainer-v2.15';
          versionDisplay.textContent = `Version: ${CACHE_VERSION}`;
 
         if ('serviceWorker' in navigator) {
