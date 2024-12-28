@@ -29,8 +29,6 @@ Try out your math skills.
 - [Play Exercises](https://daddiotime-mentalmath.netlify.app/index.html)
 
 
-
-
 ---
 
 ## How It Works
