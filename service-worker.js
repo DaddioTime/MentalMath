@@ -1,6 +1,6 @@
  // service-worker.js
 
- const CACHE_NAME = 'math-trainer-v2.11';
+ const CACHE_NAME = 'math-trainer-v2.12';
  const urlsToCache = [
      'index.html' // Add your HTML file here
  ];
@@ -9,7 +9,7 @@
      event.waitUntil(
          caches.open(CACHE_NAME)
              .then(cache => {
-                 console.log('Opened cache');
+                 console.log('Opened cache and adding files');
                  return cache.addAll(urlsToCache);
              })
      );
@@ -20,9 +20,11 @@
          caches.match(event.request)
              .then(response => {
                  if (response) {
+                     console.log('Returning cached response for:', event.request.url);
                      return response; // Return cached response
                  }
  
+                 console.log('Fetching from network:', event.request.url);
                  return fetch(event.request); // Fetch from network if not in cache
              })
      );
@@ -35,9 +37,10 @@
               return Promise.all(
                   cacheNames.map(cacheName => {
                       if (cacheWhiteList.indexOf(cacheName) === -1) {
+                          console.log('Deleting old cache:', cacheName);
                           return caches.delete(cacheName);
-                     }
-                 })
+                      }
+                  })
               )
           })
       )
