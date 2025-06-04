@@ -65,12 +65,12 @@ self.addEventListener('fetch', event => {
 
 // Remove old caches
 self.addEventListener('activate', event => {
-  const cacheWhiteList = [CACHE_NAME];
+  const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
-          if (!cacheWhiteList.includes(cacheName)) {
+          if (!cacheWhitelist.includes(cacheName)) {
             console.log('Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
