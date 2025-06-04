@@ -128,11 +128,15 @@ function getRandomIntInclusive(min, max) {
 
 // Initialize progress bar
 function initProgressBar() {
-  progressBarElement.innerHTML = ''; 
+  progressBarElement.innerHTML = '';
   progressCircles = [];
+  const darkMode = body.classList.contains('dark-mode');
   for (let i = 0; i < roundLimit; i++) {
     const circle = document.createElement('div');
     circle.classList.add('progress-circle');
+    if (darkMode) {
+      circle.classList.add('dark-mode');
+    }
     progressBarElement.appendChild(circle);
     progressCircles.push(circle);
   }
