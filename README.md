@@ -18,7 +18,7 @@ This repository contains a web application designed to help users practice and i
 - **Multilingual Support**: Supports both English and German, adapting to your browser's language settings.
 - **Dark/Light Mode**: Automatically adjusts to your device's system settings for dark or light mode.
 - **Unique Answers**: Ensures that answer choices are always unique to prevent duplicates.
-- **Offline Capability**: The app can be used offline by embedding all CSS and JavaScript in the HTML and with a service worker caching the app.
+- **Offline Capability**: A service worker caches the HTML along with the external CSS and JavaScript files so the app runs offline.
 
 ---
 
