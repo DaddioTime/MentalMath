@@ -10,7 +10,7 @@ This repository contains a web application designed to help users practice and i
 
 - **Multiple Operations**: Practice addition, subtraction, multiplication, and division with a single app.
 - **Adjustable Difficulty**: Choose the number range to tailor the difficulty to your skill level (e.g., up to 5, 10, 20, 50, 100, or use tens/fives for easier large numbers).
-- **Responsive Design**: Optimized for seamless use on various devices, including smartphones and tablets.
+- **Responsive Design**: Optimized for seamless use on phones, tablets and desktop browsers.
 - **Real-Time Feedback**: Immediate visual feedback on correct/incorrect answers.
 - **Progress Tracking**: A visual progress bar tracks your performance through each round of 10 questions.
 - **Error Handling**: If you answer incorrectly, the correct answer is shown briefly in a modal window.
