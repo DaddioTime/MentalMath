@@ -222,16 +222,18 @@ function generateQuestion() {
 
   let num1, num2;
 
+  // Determine the value scale based on range settings
+  const multiplier = useTensOrFives ? (maxNumber === 10 ? 10 : 5) : 1;
+  const maxVal = maxNumber * multiplier;
+
   // Division - ensure no remainder
   if (currentOperation === 'division') {
-    const divisor = getRandomIntInclusive(1, maxNumber);
+    const divisor = getRandomIntInclusive(1, maxNumber) * multiplier;
     const quotient = getRandomIntInclusive(0, maxNumber);
     num1 = quotient * divisor;
     num2 = divisor;
   } else {
     if (useTensOrFives) {
-      // For Tens or Fives, multiplier = 10 or 5
-      const multiplier = (maxNumber === 10) ? 10 : 5;
       num1 = getRandomIntInclusive(1, maxNumber) * multiplier;
       num2 = getRandomIntInclusive(1, maxNumber) * multiplier;
     } else {
@@ -280,11 +282,11 @@ function generateQuestion() {
       let wrongAnswer;
       do {
         if (currentOperation === 'multiplication') {
-          wrongAnswer = getRandomIntInclusive(0, (maxNumber + 1) * (maxNumber + 1));
+          wrongAnswer = getRandomIntInclusive(0, maxVal * maxVal);
         } else if (currentOperation === 'subtraction') {
-          wrongAnswer = getRandomIntInclusive(-maxNumber, maxNumber);
+          wrongAnswer = getRandomIntInclusive(-maxVal, maxVal);
         } else {
-          wrongAnswer = getRandomIntInclusive(0, maxNumber * 2);
+          wrongAnswer = getRandomIntInclusive(0, maxVal * 2);
         }
       } while (wrongAnswer === currentAnswer || generatedAnswers.includes(wrongAnswer));
       
