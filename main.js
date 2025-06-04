@@ -331,19 +331,23 @@ function checkAnswer(selectedValue) {
  * Event Listeners
  ****************************************************/
 // Operation buttons
-document.getElementById('additionBtn').addEventListener('click', () => setOperation('addition'));
-document.getElementById('subtractionBtn').addEventListener('click', () => setOperation('subtraction'));
-document.getElementById('multiplicationBtn').addEventListener('click', () => setOperation('multiplication'));
-document.getElementById('divisionBtn').addEventListener('click', () => setOperation('division'));
+const operations = ['addition', 'subtraction', 'multiplication', 'division'];
+operations.forEach(op => {
+  document.getElementById(`${op}Btn`).addEventListener('click', () => setOperation(op));
+});
 
-// Range buttons
-document.getElementById('rangeBtn5').addEventListener('click', () => setRange(5, false));
-document.getElementById('rangeBtn10').addEventListener('click', () => setRange(10, false));
-document.getElementById('rangeBtn20').addEventListener('click', () => setRange(20, false));
-document.getElementById('rangeBtn50').addEventListener('click', () => setRange(50, false));
-document.getElementById('rangeBtn100').addEventListener('click', () => setRange(100, false));
-document.getElementById('rangeBtnTens').addEventListener('click', () => setRange(10, true));
-document.getElementById('rangeBtnFives').addEventListener('click', () => setRange(5, true));
+const ranges = [
+  { id: 'rangeBtn5', max: 5, tens: false },
+  { id: 'rangeBtn10', max: 10, tens: false },
+  { id: 'rangeBtn20', max: 20, tens: false },
+  { id: 'rangeBtn50', max: 50, tens: false },
+  { id: 'rangeBtn100', max: 100, tens: false },
+  { id: 'rangeBtnTens', max: 10, tens: true },
+  { id: 'rangeBtnFives', max: 5, tens: true }
+];
+ranges.forEach(r => {
+  document.getElementById(r.id).addEventListener('click', () => setRange(r.max, r.tens));
+});
 
 // Answer buttons
 document.querySelectorAll('.option').forEach(optionBtn => {
